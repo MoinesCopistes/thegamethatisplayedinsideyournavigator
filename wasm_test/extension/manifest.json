@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Mousse",
+  "version": "1.0",
+
+  "description": "Adds a red border to all webpages matching mozilla.org.",
+
+  "action": {
+      "default_title": "Start mousse"
+  },
+  "permissions": ["scripting", "activeTab"],
+  "background": {
+    "scripts": ["mousse.js"]
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["game.wasm"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

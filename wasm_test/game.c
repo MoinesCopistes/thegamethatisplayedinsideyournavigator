@@ -1,25 +1,28 @@
 #include "raylib-6.2/src/raylib.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
 #endif
 
-const int screenWidth = 800;
-const int screenHeight = 450;
 
 void UpdateDrawFrame() {
 
   BeginDrawing();
 
-  ClearBackground(RAYWHITE);
+  ClearBackground(BLANK);
 
-  DrawText("Congrats! You created your first window and it works !", 190, 200,
-           20, LIGHTGRAY);
+  DrawText("Congrats! You created your first window bite bite !", 190, 200, 20,
+           RED);
 
   EndDrawing();
 }
 
-int main(void) {
+int main(int argc, char **argv) {
+    printf("hello, world %d %s %s %s\n", argc, argv[0], argv[1], argv[2]); 
+    int screenHeight = atoi(argv[1]); 
+    int screenWidth = atoi(argv[2]); 
   InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
 
 #if defined(PLATFORM_WEB)

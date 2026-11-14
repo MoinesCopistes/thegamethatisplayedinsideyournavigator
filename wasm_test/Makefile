@@ -3,7 +3,8 @@ DIR = ./raylib-6.2/src
 BUILD = ./build/
 
 main: build/libraylib.a game.c
-	emcc -o build/game.html game.c -Os -Wall build/libraylib.a -I.  -L. -Lbuild/libraylib-a -s USE_GLFW=3 --shell-file shell.html -DPLATFORM_WEB
+	emcc -o build/game.html game.c -Os -Wall build/libraylib.a -I.  -L. -Lbuild/libraylib-a -s USE_GLFW=3 -DPLATFORM_WEB
+	cp -r build/game.js build/game.wasm extension
 
 build/libraylib.a: $(DIR)/raylib.h
 	mkdir -p $(BUILD)
