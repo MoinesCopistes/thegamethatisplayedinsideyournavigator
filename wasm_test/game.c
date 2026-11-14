@@ -13,7 +13,7 @@ void UpdateDrawFrame() {
 
   ClearBackground(BLANK);
 
-  DrawText("Congrats! You created your first window bite bite !", 190, 200, 20,
+  DrawText("coucou", 190, 200, 20,
            RED);
 
   EndDrawing();

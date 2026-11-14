@@ -1,4 +1,5 @@
 *.a
+game.js
 *.o
 *.wasm
 */build/
