@@ -6,6 +6,7 @@ typedef struct {
     Rectangle rect;
     Texture2D texture;
     Vector2 pos;
+    Vector2 final_pos;
 } Region;
 
 

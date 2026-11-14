@@ -9,14 +9,12 @@
 
 
 typedef struct {
-    Rectangle rec;
+    Rectangle rect;
     bool kill; 
 } Platform;
 
          
 typedef struct {
-    Rectangle rect;
-    bool danger;
     Platform *items;
     size_t  count;
     size_t  capacity;

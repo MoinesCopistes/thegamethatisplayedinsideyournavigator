@@ -151,7 +151,8 @@ DetectionResult process_screen(const char *path) {
             da_append(result, ((Region){
                 .rect    = r,
                 .texture = tex,
-                .pos     = (Vector2){ (float)rect.x, (float)rect.y },
+                .pos     = (Vector2){ (float)rect.x, (float)rect.y},
+                .final_pos = (Vector2){0, 0}
             }));
 
             Pixel *viz = (Pixel *)vis.data;
