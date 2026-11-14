@@ -1,9 +1,9 @@
 
-DIR = ./raylib-6.2/src
+DIR = ./vendor/raylib-6.2/src
 BUILD = ./build/
 
-main: build/libraylib.a src/game.c src/box_finder.c
-	emcc -g2 -sFORCE_FILESYSTEM -s ALLOW_MEMORY_GROWTH=1 -I./raylib-6.2/src -Iinclude -o build/game.html src/game.c src/box_finder.c -Wall build/libraylib.a -I.  -L. -Lbuild/libraylib-a -s USE_GLFW=3 -DPLATFORM_WEB -O3
+main: build/libraylib.a src/game.c src/box_finder.c src/bike.c src/level_assembler.c src/level_manager.c
+	emcc -g2 -sFORCE_FILESYSTEM -s ALLOW_MEMORY_GROWTH=1 -I./vendor/raylib-6.2/src -Iinclude -o build/game.html src/game.c src/bike.c src/level_assembler.c src/level_manager.c src/box_finder.c -Wall build/libraylib.a -I.  -L. -Lbuild/libraylib-a -s USE_GLFW=3 -DPLATFORM_WEB -O3
 	cp -r build/game.js build/game.wasm extension
 
 build/libraylib.a: $(DIR)/raylib.h
