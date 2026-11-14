@@ -1,0 +1,53 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-Iinclude",
+      "-Ivendor/raylib-6.2/src",
+      "-o",
+      "bin/game",
+      "src/box_finder.c"
+    ],
+    "directory": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator",
+    "file": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator/src/box_finder.c",
+    "output": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator/bin/game"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-Iinclude",
+      "-Ivendor/raylib-6.2/src",
+      "-o",
+      "bin/game",
+      "src/main.c"
+    ],
+    "directory": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator",
+    "file": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator/src/main.c",
+    "output": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator/bin/game"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-Iinclude",
+      "-Ivendor/raylib-6.2/src",
+      "-o",
+      "bin/game",
+      "src/platform.c"
+    ],
+    "directory": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator",
+    "file": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator/src/platform.c",
+    "output": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator/bin/game"
+  }
+]

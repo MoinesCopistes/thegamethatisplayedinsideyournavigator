@@ -3394,8 +3394,8 @@ unsigned int rlLoadTexture(const void *data, int width, int height, int format, 
     // Unbind current texture
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    if (id > 0) TRACELOG(RL_LOG_INFO, "TEXTURE: [ID %i] Texture loaded successfully (%ix%i | %s | %i mipmaps)", id, width, height, rlGetPixelFormatName(format), mipmapCount);
-    else TRACELOG(RL_LOG_WARNING, "TEXTURE: Failed to load texture");
+    if (id <= 0) {TRACELOG(RL_LOG_WARNING, "TEXTURE : Failed to load texture");}//TRACELOG(RL_LOG_INFO, "TEXTURE: [ID %i] Texture loaded successfully (%ix%i | %s | %i mipmaps)", id, width, height, rlGetPixelFormatName(format), mipmapCount);
+    // else TRACELOG(RL_LOG_WARNING, "TEXTURE: Failed to load texture");
 
     return id;
 }
