@@ -3,3 +3,4 @@ game.js
 *.o
 *.wasm
 */build/
+.cache/

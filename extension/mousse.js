@@ -31,10 +31,26 @@ browser.action.onClicked.addListener(async (tab) => {
 
                                 var width = document.documentElement["clientWidth"];
                                 var height = document.documentElement["clientHeight"];
+
+                                const bg = getComputedStyle(document.body).backgroundColor; 
+                                const matches = bg.match(/[\d.]+/g);
+                                const r = parseInt(matches[0], 10);
+                                const g = parseInt(matches[1], 10);
+                                const b = parseInt(matches[2], 10);
+                                const a = matches[3] ? parseFloat(matches[3]) : 1.0; 
+                                const a255 = Math.round(a * 255);
+
                                 // https://emscripten.org/docs/api_reference/module.html
                                 globalThis.Module = {
                                         canvas,
-                                        arguments: ["" + height, "" + width],
+                                            arguments: [
+                                                "" + height, 
+                                                "" + width, 
+                                                "" + r, 
+                                                "" + g, 
+                                                "" + b, 
+                                                "" + a255
+                                            ],
                                         locateFile: (path) => path.endsWith(".wasm") ? wasmUrl : path,
                                         preRun: [() => {
 
