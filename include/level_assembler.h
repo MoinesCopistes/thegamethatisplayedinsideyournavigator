@@ -9,7 +9,7 @@
 
 
 
-void remove_texture_region(Image *img, DetectionResult *r);
+void remove_texture_region(Image *img, DetectionResult *r, bool *usage_mask);
 
 
 void get_transformations(Platforms *p, DetectionResult *r, bool *usage_mask);

@@ -31,7 +31,7 @@ int main() {
     }
 
     Image background_img = LoadImage("tests/wiki.png");
-    // remove_texture_region(&background_img, &res);
+    remove_texture_region(&background_img, &res, usage_mask);
     Texture2D background = LoadTextureFromImage(background_img);
     UnloadImage(background_img);
 

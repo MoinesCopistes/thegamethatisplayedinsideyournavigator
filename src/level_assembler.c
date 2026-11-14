@@ -1,13 +1,16 @@
 #include "level_assembler.h"
 #include "box_finder.h"
+#include "raylib.h"
 #include "reasings.h"
 
 #define TRESHOLD_PX 10
 
 
-void remove_texture_region(Image *img, DetectionResult *r) {
+void remove_texture_region(Image *img, DetectionResult *r, bool *usage_mask) {
     for (size_t i = 0; i < r->count; i++) {
-        ImageDrawRectangleRec(img, r->items[i].rect, WHITE);
+        if (!usage_mask[i]) continue;
+        Color bg_color = GetImageColor(*img, r->items[i].pos.x - 1, r->items[i].pos.y);
+        ImageDrawRectangleRec(img, r->items[i].rect, bg_color);
     }
 }
 
