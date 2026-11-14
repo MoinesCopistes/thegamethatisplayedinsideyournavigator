@@ -11,12 +11,14 @@
 #include <emscripten/emscripten.h>
 #endif
 
+#define BG_GAP 50.0
+
 DetectionResult result;
 Platforms plat = {0};
 Bike *bike;
 Texture2D bike_texture;
 Texture2D background;
-
+Color bg_color;
 int animation_frame_count = 0;
 int fading_frame_count = 0;
 bool *usage_mask;
@@ -53,7 +55,7 @@ void UpdateDrawFrame() {
     animation_frame_count++;
 
     BeginDrawing();
-    ClearBackground(WHITE);
+    ClearBackground(bg_color);
 
     if (animation_finished && fading_frame_count < 60) {
         fading_frame_count++;
@@ -66,6 +68,43 @@ void UpdateDrawFrame() {
     int stagger_delay = 4;
     int anim_duration = 60;
     int active_index = 0;
+    for (size_t i = 0; i < result.count; i++) {
+        if (!usage_mask[i])
+            continue;
+
+        int start_frame = active_index * stagger_delay;
+        int local_frame = animation_frame_count - start_frame;
+        double percentage = ((double)local_frame / (double)anim_duration);
+        percentage = percentage * percentage; // quadtratic
+        active_index++;
+        Region reg = result.items[i];
+
+        if (local_frame <= 0) {
+        } else if (local_frame < anim_duration) {
+            Vector2 pos =
+                update_rec_position(local_frame, anim_duration, i, &result);
+
+            DrawRectangleV(
+                (Vector2){
+                    .x = (int)((double)pos.x - (BG_GAP / 2.0) * percentage),
+                    .y = (int)((double)pos.y - (BG_GAP / 2.0) * percentage)},
+                (Vector2){.x = (int)(((double)reg.texture.width + BG_GAP) *
+                                     percentage),
+                          .y = (int)(((double)reg.texture.height + BG_GAP) *
+                                     percentage)},
+                bg_color);
+        } else {
+            DrawRectangleV((Vector2){.x = reg.final_pos.x - BG_GAP / 2.0,
+                                     .y = reg.final_pos.y - BG_GAP / 2.0},
+                           (Vector2){.x = reg.texture.width + BG_GAP,
+                                     .y = reg.texture.height + BG_GAP},
+                           bg_color);
+        }
+    }
+
+    stagger_delay = 4;
+    anim_duration = 60;
+    active_index = 0;
     for (size_t i = 0; i < result.count; i++) {
         if (!usage_mask[i])
             continue;
@@ -87,6 +126,7 @@ void UpdateDrawFrame() {
             }
         }
     }
+
     DrawBike(bike);
     EndDrawing();
 }
@@ -101,7 +141,7 @@ int main(int argc, char **argv) {
     unsigned char b = (unsigned char)atoi(argv[5]);
     unsigned char a = (unsigned char)atoi(argv[6]);
 
-    Color bg_color = (Color){r, g, b, a};
+    bg_color = (Color){r, g, b, a};
     InitWindow(screenWidth, screenHeight,
                "raylib [core] example - basic window");
     result = process_screen("/screenshot.png");
