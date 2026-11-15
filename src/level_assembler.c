@@ -100,3 +100,16 @@ Vector2 update_rec_position(int frame, int max_frames, int index,
 
     return (Vector2){.x = pos_x, .y = pos_y};
 }
+
+Vector2 remove_rec_position(int frame, int max_frames, int index, DetectionResult *res) {
+    Region reg = res->items[index];
+
+    float change_x = reg.pos.x - reg.final_pos.x;
+    float change_y = reg.pos.y - reg.final_pos.y;
+
+    int pos_x = EaseCubicInOut(frame, reg.final_pos.x, change_x, max_frames);
+    int pos_y = EaseCubicInOut(frame, reg.final_pos.y, change_y, max_frames);
+
+    return (Vector2){.x = pos_x, .y = pos_y};
+    
+}

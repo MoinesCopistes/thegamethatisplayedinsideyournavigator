@@ -31,6 +31,7 @@ typedef struct {
   double throttle;
   double torque;
   bool on_ground;
+  bool dead;
 } Bike;
 
 void step(Bike *bike, Platforms p);

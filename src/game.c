@@ -13,6 +13,7 @@
 #endif
 
 #define BG_GAP 50.0
+#define DEATH_ANIM_DURATION 90
 
 DetectionResult result;
 Platforms plat = {0};
@@ -28,12 +29,13 @@ bool *usage_mask;
 bool animation_finished = false;
 size_t last_anim_idx = -1;
 float accumulator = 0.0f;
+int death_frame_count = 0;
+
 
 static void UpdatePlatforms(float delta_time) {
     for (size_t i = 0; i < plat.count; i++) {
         Platform *platform = &plat.items[i];
-        if (!platform->move)
-            continue;
+        if (!platform->move) continue;
 
         Vector2 old_position = {platform->rect.x, platform->rect.y};
 
@@ -63,11 +65,8 @@ static void UpdatePlatforms(float delta_time) {
         Vector2 movement = {platform->rect.x - old_position.x,
                             platform->rect.y - old_position.y};
 
-        // Keep every texture cutout attached to this platform. A platform can
-        // own several regions, but its position is updated only once above.
         for (size_t j = 0; j < result.count; j++) {
-            if (!usage_mask[j] || result.items[j].platform != platform)
-                continue;
+            if (!usage_mask[j] || result.items[j].platform != platform) continue;
 
             result.items[j].final_pos.x += movement.x;
             result.items[j].final_pos.y += movement.y;
@@ -78,42 +77,38 @@ static void UpdatePlatforms(float delta_time) {
 }
 
 void DrawBike(Bike *bike) {
-
-    Vector2 diff = {.x = (bike->w2.x - bike->w1.x),
-                    .y = (bike->w2.y - bike->w1.y)};
+    Vector2 diff = {.x = (bike->w2.x - bike->w1.x), .y = (bike->w2.y - bike->w1.y)};
     double angle = atan2((double)diff.y, (double)diff.x);
-    Vector2 origin = {.x = bike_texture.width / 4.0f,
-                      .y = 3.0 * bike_texture.height / 4.0f};
+    Vector2 origin = {.x = bike_texture.width / 4.0f, .y = 3.0 * bike_texture.height / 4.0f};
 
     Rectangle source = {0, 0, bike_texture.width, bike_texture.height};
+    Rectangle dest = {bike->w1.x + 10, bike->w1.y, bike_texture.width, bike_texture.height};
 
-    Rectangle dest = {bike->w1.x + 10, bike->w1.y, bike_texture.width,
-                      bike_texture.height};
+    // Draw the bike normally (or fade it out if dead)
+    if (!bike->dead) {
+        DrawTexturePro(bike_texture, source, dest, origin, angle * RAD2DEG, WHITE);
+        
+        Vector2 bike_axis = {(float)cos(angle), (float)sin(angle)};
+        Vector2 bike_normal = {-bike_axis.y, bike_axis.x};
+        Vector2 egg_anchor = {
+            .x = bike->w1.x + 15.0f * bike_axis.x - 31.0f * bike_normal.x,
+            .y = bike->w1.y + 15.0f * bike_axis.y - 31.0f * bike_normal.y,
+        };
+        Rectangle egg_source = {0, 0, egg.width, egg.height};
+        Rectangle egg_dest = {egg_anchor.x, egg_anchor.y, egg.width, egg.height};
+        Vector2 egg_origin = {egg.width / 2.0f, egg.height};
+        DrawTexturePro(egg, egg_source, egg_dest, egg_origin, angle * RAD2DEG, WHITE);
+    } else if (death_frame_count < 30) {
+        // Fade the bike out over the first 30 frames of death
+        float alpha = 1.0f - ((float)death_frame_count / 30.0f);
+        DrawTexturePro(bike_texture, source, dest, origin, angle * RAD2DEG, Fade(WHITE, alpha));
+    }
 
-    // DrawCircle(bike->w1.x, bike->w1.y, bike->radius, YELLOW);
-    // DrawCircle(bike->w2.x, bike->w2.y, bike->radius, YELLOW);
-    DrawTexturePro(bike_texture, source, dest, origin, angle * RAD2DEG, WHITE);
-
-    // Keep the egg attached to the saddle in the bike's local coordinate
-    // system. Rotating DrawTextureEx() around its top-left corner made it
-    // drift away from the bike as soon as the bike tilted.
-    Vector2 bike_axis = {(float)cos(angle), (float)sin(angle)};
-    Vector2 bike_normal = {-bike_axis.y, bike_axis.x};
-    Vector2 egg_anchor = {
-        .x = bike->w1.x + 15.0f * bike_axis.x - 31.0f * bike_normal.x,
-        .y = bike->w1.y + 15.0f * bike_axis.y - 31.0f * bike_normal.y,
-    };
-    Rectangle egg_source = {0, 0, egg.width, egg.height};
-    Rectangle egg_dest = {egg_anchor.x, egg_anchor.y, egg.width, egg.height};
-    Vector2 egg_origin = {egg.width / 2.0f, egg.height};
-    DrawTexturePro(egg, egg_source, egg_dest, egg_origin, angle * RAD2DEG,
-                   WHITE);
+    // --- STOP PHYSICS AND INPUT IF DEAD ---
+    if (bike->dead) return; 
 
     float frameTime = GetFrameTime();
-
-    // Avoid huge catch-up after a lag spike.
-    frameTime = fminf(frameTime, 0.25f);
-
+    frameTime = fminf(frameTime, 0.25f); // Avoid huge catch-up after a lag spike.
     accumulator += frameTime;
 
     while (accumulator >= BIKE_DT) {
@@ -121,33 +116,33 @@ void DrawBike(Bike *bike) {
         accumulator -= BIKE_DT;
     }
 
-    if (IsKeyDown(KEY_RIGHT)) {
-        bike->throttle = 1;
-    } else if (IsKeyDown(KEY_LEFT)) {
-        bike->throttle = -1;
-    } else {
-        bike->throttle = 0;
-    }
-    if (IsKeyDown(KEY_UP)) {
-        bike->torque = 10;
-    } else if (IsKeyDown(KEY_DOWN)) {
-        bike->torque = -10;    
-    } else {
-        bike->torque = 0;
-    }
-    if (IsKeyPressed(KEY_SPACE)) {
-        jump(bike);
-    }
+    if (IsKeyDown(KEY_RIGHT)) bike->throttle = 1;
+    else if (IsKeyDown(KEY_LEFT)) bike->throttle = -1;
+    else bike->throttle = 0;
+
+    if (IsKeyDown(KEY_UP)) bike->torque = 10;
+    else if (IsKeyDown(KEY_DOWN)) bike->torque = -10;
+    else bike->torque = 0;
+
+    if (IsKeyPressed(KEY_SPACE)) jump(bike);
 }
 
 void UpdateDrawFrame() {
     animation_frame_count++;
 
+    // 1. Handle Death Counter ONCE per frame
+    if (bike->dead) {
+        if (death_frame_count < DEATH_ANIM_DURATION) {
+            death_frame_count++;
+        }
+    } else {
+        death_frame_count = 0;
+    }
+
     if (animation_finished)
         UpdatePlatforms(GetFrameTime());
 
     BeginDrawing();
-
     DrawTexture(background, 0, 0, WHITE);
 
     if (animation_finished && fading_frame_count < 100) {
@@ -156,9 +151,7 @@ void UpdateDrawFrame() {
 
     if (fading_frame_count > 0) {
         float alpha = (float)fading_frame_count / 100.0f;
-
-        DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(),
-                      Fade(bg_color, alpha));
+        DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(bg_color, alpha));
     }
 
     int stagger_delay = 4;
@@ -166,6 +159,7 @@ void UpdateDrawFrame() {
     int active_index = 0;
     int modulo = 128;
     int countDone = 0;
+
     for (size_t i = 0; i < result.count; i++) {
         if (!usage_mask[i]) {
             countDone++;
@@ -175,61 +169,62 @@ void UpdateDrawFrame() {
         int start_frame = active_index * stagger_delay;
         int local_frame = animation_frame_count - start_frame;
         double percentage = ((double)local_frame / (double)anim_duration);
-        percentage = percentage * percentage; // quadtratic
+        percentage = percentage * percentage; // quadratic
         active_index++;
         active_index = active_index % modulo;
         Region reg = result.items[i];
 
         if (local_frame <= 0) {
         } else if (local_frame < anim_duration) {
-            Vector2 pos =
-                update_rec_position(local_frame, anim_duration, i, &result);
-
+            Vector2 pos = update_rec_position(local_frame, anim_duration, i, &result);
             DrawRectangleV(
                 (Vector2){
                     .x = (int)((double)pos.x - (BG_GAP / 2.0) * percentage),
                     .y = (int)((double)pos.y - (BG_GAP / 2.0) * percentage)},
-                (Vector2){.x = (int)(((double)reg.texture.width + BG_GAP) *
-                                     percentage),
-                          .y = (int)(((double)reg.texture.height + BG_GAP) *
-                                     percentage)},
+                (Vector2){.x = (int)(((double)reg.texture.width + BG_GAP) * percentage),
+                          .y = (int)(((double)reg.texture.height + BG_GAP) * percentage)},
                 bg_color);
         } else {
-
             countDone++;
-            DrawRectangleV((Vector2){.x = reg.final_pos.x - BG_GAP / 2.0,
-                                     .y = reg.final_pos.y - BG_GAP / 2.0},
+            float alpha = bike->dead ? (1.0f - ((float)death_frame_count / DEATH_ANIM_DURATION)) : 1.0f;
+            DrawRectangleV((Vector2){.x = reg.final_pos.x - BG_GAP / 2.0f,
+                                     .y = reg.final_pos.y - BG_GAP / 2.0f},
                            (Vector2){.x = reg.texture.width + BG_GAP,
                                      .y = reg.texture.height + BG_GAP},
-                           bg_color);
+                           Fade(bg_color, alpha));
         }
     }
+    
     if (countDone == result.count) {
         animation_finished = true;
     }
 
     active_index = 0;
     for (size_t i = 0; i < result.count; i++) {
-        if (!usage_mask[i])
-            continue;
+        if (!usage_mask[i]) continue;
 
         int start_frame = active_index * stagger_delay;
         int local_frame = animation_frame_count - start_frame;
         active_index++;
         active_index = active_index % modulo;
         Region reg = result.items[i];
+        
         if (local_frame <= 0) {
             DrawTextureV(reg.texture, reg.pos, WHITE);
         } else if (local_frame < anim_duration) {
-            Vector2 pos =
-                update_rec_position(local_frame, anim_duration, i, &result);
+            Vector2 pos = update_rec_position(local_frame, anim_duration, i, &result);
             DrawTextureV(reg.texture, pos, WHITE);
+        } else if (!bike->dead) {
+            DrawTextureV(reg.texture, reg.final_pos, reg.platform->bumper ? RED : WHITE);
         } else {
-            DrawTextureV(reg.texture, reg.final_pos,
-                         reg.platform->bumper ? RED : WHITE);
+            if (death_frame_count < DEATH_ANIM_DURATION) {
+                Vector2 dead_pos = remove_rec_position(death_frame_count, DEATH_ANIM_DURATION, i, &result);
+                DrawTextureV(reg.texture, dead_pos, WHITE);
+            } else {
+                DrawTextureV(reg.texture, reg.pos, WHITE);
+            }
         }
     }
-
 
     DrawBike(bike);
     EndDrawing();
@@ -247,9 +242,9 @@ int main(int argc, char **argv) {
     bg_color = (Color){r, g, b, 255};
     InitWindow(screenWidth, screenHeight, "Matreggs");
     result = process_screen("/screenshot.png");
+    
     Image bike_image = LoadImageFromMemory(".png", bike_png, bike_png_len);
-    ImageResize(&bike_image, 80,
-                (double)bike_image.height / (double)bike_image.width * 80);
+    ImageResize(&bike_image, 80, (double)bike_image.height / (double)bike_image.width * 80);
 
     int brightness = (0.21 * r) + (0.72 * g) + (0.07 * b);
     if (brightness <= 125)
@@ -257,21 +252,18 @@ int main(int argc, char **argv) {
     bike_texture = LoadTextureFromImage(bike_image);
 
     Image egg_image = LoadImageFromMemory(".png", egg_png, egg_png_len);
-    ImageResize(&egg_image, 18,
-                (double)egg_image.height / (double)egg_image.width * 18);
-
+    ImageResize(&egg_image, 18, (double)egg_image.height / (double)egg_image.width * 18);
     egg = LoadTextureFromImage(egg_image);
-    printf("texture: %d", bike_texture.height);
 
     plat = get_level();
     usage_mask = malloc(sizeof(bool) * result.count);
     for (size_t i = 0; i < result.count; i++) {
         usage_mask[i] = 0;
     }
+    
     get_transformations(&plat, &result, usage_mask);
     for (size_t i = 0; i < result.count; i++) {
-        if (usage_mask[i])
-            last_anim_idx = i;
+        if (usage_mask[i]) last_anim_idx = i;
     }
 
     Image background_img = LoadImage("/screenshot.png");
@@ -282,8 +274,7 @@ int main(int argc, char **argv) {
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
 #else
-
-    {
+    while (!WindowShouldClose()) {
         UpdateDrawFrame();
     }
 #endif
