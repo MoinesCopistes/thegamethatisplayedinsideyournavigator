@@ -31,6 +31,22 @@ static Platform bumper(float x, float y, float width, float height,
     return platform;
 }
 
+static Platform deadly(float x, float y, float width, float height) {
+    Platform platform = solid(x, y, width, height);
+    platform.kill = true;
+    return platform;
+}
+
+static Platform moving_bumper(float x, float y, float width, float height,
+                              float min_x, float min_y, float max_x,
+                              float max_y, float speed_x, float speed_y,
+                              double strength) {
+    Platform platform = moving(x, y, width, height, min_x, min_y, max_x,
+                               max_y, speed_x, speed_y);
+    platform.bumper = strength;
+    return platform;
+}
+
 static Platform finish(float x, float y, float width, float height) {
     Platform platform = solid(x, y, width, height);
     platform.end = true;
@@ -55,7 +71,6 @@ Platforms get_level(int level_id) {
         break;
 
     case 2:
-    default:
         // Stairway: learn to jump across progressively higher ledges.
         da_append(p, starting(150, 320, 300, 50));
         da_append(p, solid(480, 400, 180, 40));
@@ -64,6 +79,22 @@ Platforms get_level(int level_id) {
         da_append(p, moving(930, 250, 170, 35, 930, 180, 930, 420, 0, 55));
         da_append(p, solid(700, 600, 400, 45));
         da_append(p, finish(940, 540, 160, 60));
+        break;
+
+    case 3:
+    default:
+        da_append(p, starting(200, 400, 300, 300));
+        da_append(p, deadly(0, 950, 1300, 40));
+
+        da_append(p, moving(540, 420, 120, 30, 540, 420, 760, 420, 60, 0));
+        da_append(p, solid(900, 440, 120, 30));
+
+        da_append(p, moving_bumper(1080, 425, 100, 30, 1080, 250, 1080,
+                                   600, 0, 70, 3));
+        da_append(p, solid(900, 220, 120, 30));
+
+        da_append(p, solid(640, 220, 220, 30));
+        da_append(p, finish(560, 180, 40, 40));
         break;
     }
 

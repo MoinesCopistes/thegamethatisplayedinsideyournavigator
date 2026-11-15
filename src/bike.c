@@ -85,6 +85,10 @@ static int collide_wheel_with_rect(Bike *bike, VerletVector *w, double radius,
         depth = radius - d;
     }
 
+    if (p.kill) {
+        bike->dead = true;
+    }
+
     if (p.bumper) {
         bike->w1.prev_y = bike->w1.y;
         bike->w2.prev_y = bike->w2.y;
