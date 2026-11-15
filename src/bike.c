@@ -89,8 +89,8 @@ static int collide_wheel_with_rect(Bike *bike, VerletVector *w, double radius,
         bike->w1.prev_y = bike->w1.y;
         bike->w2.prev_y = bike->w2.y;
 
-        bike->w1.y -= 13;
-        bike->w2.y -= 13;
+        bike->w1.y -= 3 * p.bumper;
+        bike->w2.y -= 3 * p.bumper;
 
         return 0;
     }
