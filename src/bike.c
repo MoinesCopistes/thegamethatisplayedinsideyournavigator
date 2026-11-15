@@ -95,6 +95,7 @@ static int collide_wheel_with_rect(Bike *bike, VerletVector *w, double radius,
         return 0;
     }
 
+
     double vx = w->x - w->prev_x;
     double vy = w->y - w->prev_y;
 
@@ -124,8 +125,13 @@ void constraint_platforms(Bike *bike, Platforms p) {
                                         &normal)) {
                 // Only an upward-facing contact counts as ground. Side and
                 // ceiling contacts still resolve, but cannot enable controls.
-                if (normal.y < -0.5f)
+                if (normal.y < -0.5f) {
                     bike->on_ground = 1;
+                    // upside down so dead
+                    if (bike->w2.x - bike->w1.x < 0.2) {
+                        // TODO: Here the egg is DEAD FOREVER MOUAHAHAHAHAH
+                    }
+                }
             }
         }
     }

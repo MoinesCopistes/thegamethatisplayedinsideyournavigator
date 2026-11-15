@@ -1,4 +1,5 @@
 #include "assets/bike_pic.h"
+#include "assets/egg.h"
 #include "bike.h"
 #include "box_finder.h"
 #include "level_assembler.h"
@@ -17,6 +18,7 @@ DetectionResult result;
 Platforms plat = {0};
 Bike *bike;
 Texture2D bike_texture;
+Texture2D egg;
 Texture2D background;
 Color bg_color;
 int animation_frame_count = 0;
@@ -43,6 +45,21 @@ void DrawBike(Bike *bike) {
     // DrawCircle(bike->w2.x, bike->w2.y, bike->radius, YELLOW);
     DrawTexturePro(bike_texture, source, dest, origin, angle * RAD2DEG, WHITE);
 
+    // Keep the egg attached to the saddle in the bike's local coordinate
+    // system. Rotating DrawTextureEx() around its top-left corner made it
+    // drift away from the bike as soon as the bike tilted.
+    Vector2 bike_axis = {(float)cos(angle), (float)sin(angle)};
+    Vector2 bike_normal = {-bike_axis.y, bike_axis.x};
+    Vector2 egg_anchor = {
+        .x = bike->w1.x + 15.0f * bike_axis.x - 31.0f * bike_normal.x,
+        .y = bike->w1.y + 15.0f * bike_axis.y - 31.0f * bike_normal.y,
+    };
+    Rectangle egg_source = {0, 0, egg.width, egg.height};
+    Rectangle egg_dest = {egg_anchor.x, egg_anchor.y, egg.width, egg.height};
+    Vector2 egg_origin = {egg.width / 2.0f, egg.height};
+    DrawTexturePro(egg, egg_source, egg_dest, egg_origin, angle * RAD2DEG,
+                   WHITE);
+
     float frameTime = GetFrameTime();
 
     // Avoid huge catch-up after a lag spike.
@@ -64,6 +81,8 @@ void DrawBike(Bike *bike) {
     }
     if (IsKeyDown(KEY_UP)) {
         bike->torque = 10;
+    } else if (IsKeyDown(KEY_DOWN)) {
+        bike->torque = -10;    
     } else {
         bike->torque = 0;
     }
@@ -185,6 +204,12 @@ int main(int argc, char **argv) {
     if (brightness <= 125)
         ImageColorInvert(&bike_image);
     bike_texture = LoadTextureFromImage(bike_image);
+
+    Image egg_image = LoadImageFromMemory(".png", egg_png, egg_png_len);
+    ImageResize(&egg_image, 18,
+                (double)egg_image.height / (double)egg_image.width * 18);
+
+    egg = LoadTextureFromImage(egg_image);
     printf("texture: %d", bike_texture.height);
 
     plat = get_level();
