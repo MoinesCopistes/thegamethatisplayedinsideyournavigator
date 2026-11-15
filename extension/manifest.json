@@ -10,9 +10,12 @@
       "default_popup": "popup.html"
   },
   "permissions": ["scripting", "activeTab"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
   "web_accessible_resources": [
     {
-      "resources": ["game.wasm"],
+      "resources": ["runner.html", "runner.js", "game.js", "game.wasm"],
       "matches": ["<all_urls>"]
     }
   ]
