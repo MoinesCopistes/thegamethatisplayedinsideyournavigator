@@ -28,6 +28,55 @@ bool *usage_mask;
 bool animation_finished = false;
 size_t last_anim_idx = -1;
 float accumulator = 0.0f;
+
+static void UpdatePlatforms(float delta_time) {
+    for (size_t i = 0; i < plat.count; i++) {
+        Platform *platform = &plat.items[i];
+        if (!platform->move)
+            continue;
+
+        Vector2 old_position = {platform->rect.x, platform->rect.y};
+
+        platform->rect.x += platform->speed.x * delta_time;
+        platform->rect.y += platform->speed.y * delta_time;
+
+        if (platform->max.x > platform->min.x) {
+            if (platform->rect.x >= platform->max.x) {
+                platform->rect.x = platform->max.x;
+                platform->speed.x = -fabsf(platform->speed.x);
+            } else if (platform->rect.x <= platform->min.x) {
+                platform->rect.x = platform->min.x;
+                platform->speed.x = fabsf(platform->speed.x);
+            }
+        }
+
+        if (platform->max.y > platform->min.y) {
+            if (platform->rect.y >= platform->max.y) {
+                platform->rect.y = platform->max.y;
+                platform->speed.y = -fabsf(platform->speed.y);
+            } else if (platform->rect.y <= platform->min.y) {
+                platform->rect.y = platform->min.y;
+                platform->speed.y = fabsf(platform->speed.y);
+            }
+        }
+
+        Vector2 movement = {platform->rect.x - old_position.x,
+                            platform->rect.y - old_position.y};
+
+        // Keep every texture cutout attached to this platform. A platform can
+        // own several regions, but its position is updated only once above.
+        for (size_t j = 0; j < result.count; j++) {
+            if (!usage_mask[j] || result.items[j].platform != platform)
+                continue;
+
+            result.items[j].final_pos.x += movement.x;
+            result.items[j].final_pos.y += movement.y;
+            result.items[j].rect.x += movement.x;
+            result.items[j].rect.y += movement.y;
+        }
+    }
+}
+
 void DrawBike(Bike *bike) {
 
     Vector2 diff = {.x = (bike->w2.x - bike->w1.x),
@@ -94,6 +143,9 @@ void DrawBike(Bike *bike) {
 void UpdateDrawFrame() {
     animation_frame_count++;
 
+    if (animation_finished)
+        UpdatePlatforms(GetFrameTime());
+
     BeginDrawing();
 
     DrawTexture(background, 0, 0, WHITE);
@@ -111,8 +163,6 @@ void UpdateDrawFrame() {
 
     int stagger_delay = 4;
     int anim_duration = 60;
-    // int stagger_delay = 0;
-    // int anim_duration = 0;
     int active_index = 0;
     int modulo = 128;
     int countDone = 0;
@@ -179,6 +229,7 @@ void UpdateDrawFrame() {
                          reg.platform->bumper ? RED : WHITE);
         }
     }
+
 
     DrawBike(bike);
     EndDrawing();
