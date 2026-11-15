@@ -201,6 +201,7 @@ void step(Bike *bike, Platforms p) {
 
     bike->on_ground = 0;
     constraint(bike, p);
+    if (bike->w1.y > GetScreenHeight()) bike->dead = true;
 }
 
 Bike *create_bike(double x, double y, uint32_t radius) {
