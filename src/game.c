@@ -134,6 +134,15 @@ void UpdateDrawFrame() {
     if (bike->dead) {
         if (death_frame_count < DEATH_ANIM_DURATION) {
             death_frame_count++;
+
+#if defined(PLATFORM_WEB)
+            // Notify the host page once, after the death animation completes.
+            if (death_frame_count == DEATH_ANIM_DURATION) {
+                EM_ASM({
+                    window.parent.postMessage({type: "mousse-dead"}, "*");
+                });
+            }
+#endif
         }
     } else {
         death_frame_count = 0;

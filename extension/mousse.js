@@ -37,13 +37,22 @@ async function start() {
                                 const revealFrame = event => {
                                         if (event.source !== frame.contentWindow || event.data?.type !== "mousse-ready") return;
                                         window.removeEventListener("message", revealFrame);
-                                        delete globalThis.__mousseRevealCleanup;
                                         frame.style.opacity = "1";
                                         frame.style.pointerEvents = "auto";
                                         frame.contentWindow.focus();
                                 };
+                                const removeFrame = event => {
+                                        if (event.source !== frame.contentWindow || event.data?.type !== "mousse-dead") return;
+                                        globalThis.__mousseRevealCleanup?.();
+                                        frame.remove();
+                                };
                                 window.addEventListener("message", revealFrame);
-                                globalThis.__mousseRevealCleanup = () => window.removeEventListener("message", revealFrame);
+                                window.addEventListener("message", removeFrame);
+                                globalThis.__mousseRevealCleanup = () => {
+                                        window.removeEventListener("message", revealFrame);
+                                        window.removeEventListener("message", removeFrame);
+                                        delete globalThis.__mousseRevealCleanup;
+                                };
                                 frame.addEventListener("load", () => {
                                         frame.contentWindow.postMessage({
                                                 type: "mousse-start",
