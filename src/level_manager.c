@@ -59,6 +59,16 @@ Platforms get_level(int level_id) {
     switch (level_id) {
 
     case 1:
+
+        da_append(p, starting(150, 300, 320, 50));
+
+        da_append(p, solid(550, 300, 100, 45));
+        da_append(p, bumper(750, 300, 100, 45, 3));
+        da_append(p, solid(1000, 300, 200, 45));
+
+        da_append(p, finish(1250, 300, 170, 60));
+        break;
+    case 2:
         // Ascenseur: use the vertical platform to reach the upper route.
         da_append(p, starting(150, 300, 300, 50));
         da_append(p, bumper(400, 290, 120, 10, 4));
@@ -70,7 +80,7 @@ Platforms get_level(int level_id) {
         da_append(p, finish(900, 130, 170, 60));
         break;
 
-    case 2:
+    case 3:
         // Stairway: learn to jump across progressively higher ledges.
         da_append(p, starting(150, 320, 300, 50));
         da_append(p, solid(480, 400, 180, 40));
@@ -81,10 +91,8 @@ Platforms get_level(int level_id) {
         da_append(p, finish(940, 540, 160, 60));
         break;
 
-    case 3:
-    default:
+    case 4:
         da_append(p, starting(200, 400, 300, 300));
-        da_append(p, deadly(0, 950, 1300, 40));
 
         da_append(p, moving(540, 420, 120, 30, 540, 420, 760, 420, 60, 0));
         da_append(p, solid(900, 440, 120, 30));
@@ -95,6 +103,25 @@ Platforms get_level(int level_id) {
 
         da_append(p, solid(640, 220, 220, 30));
         da_append(p, finish(560, 180, 40, 40));
+        break;
+
+    case 5:
+    default:
+        da_append(p, starting(200, 400, 300, 300));
+
+        da_append(p, solid(560, 760, 120, 30));
+        da_append(p, bumper(560, 750, 120, 10, 3.5));
+        da_append(p, solid(740, 500, 100, 30));
+
+        da_append(p, moving(880, 480, 100, 30, 880, 480, 1000, 480, 70, 0));
+        da_append(p, solid(1120, 620, 80, 30));
+        da_append(p, bumper(1120, 610, 80, 10, 4));
+        da_append(p, solid(900, 270, 140, 30));
+
+        da_append(p, moving(760, 250, 100, 30, 760, 160, 760, 340, 0, 60));
+        da_append(p, solid(540, 240, 160, 30));
+        da_append(p, deadly(620, 220, 30, 20));
+        da_append(p, finish(440, 200, 40, 40));
         break;
     }
 
