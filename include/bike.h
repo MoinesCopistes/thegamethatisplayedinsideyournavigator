@@ -7,8 +7,8 @@
 
 #define BIKE_LENGTH 50
 #define GRAVITY 1200
-#define THROTTLE_ACCEL 1500
-#define TORQUE_ACCEL 135
+#define THROTTLE_ACCEL 1700
+#define TORQUE_ACCEL 130
 #define JUMP_SPEED 400
 
 typedef struct {

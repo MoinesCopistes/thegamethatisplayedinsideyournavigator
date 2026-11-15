@@ -38,8 +38,8 @@ void DrawBike(Bike *bike) {
     Rectangle dest = {bike->w1.x + 10, bike->w1.y, bike_texture.width,
                       bike_texture.height};
 
-    DrawCircle(bike->w1.x, bike->w1.y, bike->radius, YELLOW);
-    DrawCircle(bike->w2.x, bike->w2.y, bike->radius, YELLOW);
+    //DrawCircle(bike->w1.x, bike->w1.y, bike->radius, YELLOW);
+    //DrawCircle(bike->w2.x, bike->w2.y, bike->radius, YELLOW);
     DrawTexturePro(bike_texture, source, dest, origin, angle * RAD2DEG, WHITE);
 
     step(bike, GetFrameTime(), plat);
@@ -150,7 +150,7 @@ void UpdateDrawFrame() {
 }
 
 int main(int argc, char **argv) {
-    bike = create_bike(200, 200, 15);
+    bike = create_bike(250, 100, 15);
 
     int screenHeight = atoi(argv[1]);
     int screenWidth = atoi(argv[2]);
