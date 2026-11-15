@@ -1,5 +1,9 @@
-browser.action.onClicked.addListener(async (tab) => {
+async function start() {
         let pngURI = await browser.tabs.captureVisibleTab()
+        const [tab] = await chrome.tabs.query({
+                active: true,
+                lastFocusedWindow: true
+        });
 
 
         await browser.scripting.executeScript({
@@ -90,6 +94,7 @@ browser.action.onClicked.addListener(async (tab) => {
                 target: { tabId: tab.id },
                 files: ["game.js"]
         });
+}
 
+document.getElementById("start").addEventListener("click", start);
 
-});

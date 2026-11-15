@@ -95,7 +95,7 @@ void UpdateDrawFrame() {
     // int stagger_delay = 0;
     // int anim_duration = 0;
     int active_index = 0;
-    int modulo = 256;
+    int modulo = 128;
     int countDone = 0;
     for (size_t i = 0; i < result.count; i++) {
         if (!usage_mask[i]) {
@@ -175,8 +175,7 @@ int main(int argc, char **argv) {
     unsigned char b = (unsigned char)atoi(argv[5]);
 
     bg_color = (Color){r, g, b, 255};
-    InitWindow(screenWidth, screenHeight,
-               "raylib [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, "Matreggs");
     result = process_screen("/screenshot.png");
     Image bike_image = LoadImageFromMemory(".png", bike_png, bike_png_len);
     ImageResize(&bike_image, 80,

@@ -6,12 +6,10 @@
   "description": "Adds a red border to all webpages matching mozilla.org.",
 
   "action": {
-      "default_title": "Start mousse"
+      "default_title": "Start mousse",
+      "default_popup": "popup.html"
   },
   "permissions": ["scripting", "activeTab"],
-  "background": {
-    "scripts": ["mousse.js"]
-  },
   "web_accessible_resources": [
     {
       "resources": ["game.wasm"],
