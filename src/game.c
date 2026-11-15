@@ -145,9 +145,8 @@ int main(int argc, char **argv) {
     unsigned char r = (unsigned char)atoi(argv[3]);
     unsigned char g = (unsigned char)atoi(argv[4]);
     unsigned char b = (unsigned char)atoi(argv[5]);
-    unsigned char a = (unsigned char)atoi(argv[6]);
 
-    bg_color = (Color){r, g, b, a};
+    bg_color = (Color){r, g, b, 255};
     InitWindow(screenWidth, screenHeight,
                "raylib [core] example - basic window");
     result = process_screen("/screenshot.png");
