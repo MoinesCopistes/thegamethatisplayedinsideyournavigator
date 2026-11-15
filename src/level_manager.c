@@ -1,10 +1,10 @@
 #include "level_manager.h"
 #include "raylib.h"
 
-Platforms get_level(int number) {
+Platforms get_level(int level_id) {
     Platforms p = {0};
-    switch (number) {
-        case 0:
+    switch (level_id) {
+        case 1:
             da_append(p,
                       ((Platform){
                           (Rectangle){.x = 200, .y = 400, .width = 300, .height = 300},
@@ -39,7 +39,7 @@ Platforms get_level(int number) {
                              .kill = 0, .move = 0, .bumper = 0, .end = 1
                              }));
             break;
-        case 1:
+        case 2:
             break;
     
     }

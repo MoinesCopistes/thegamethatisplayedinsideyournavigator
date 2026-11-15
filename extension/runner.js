@@ -1,7 +1,7 @@
 window.addEventListener("message", (event) => {
         if (event.source !== parent || event.data?.type !== "mousse-start") return;
 
-        const { pngURI, wasmUrl, width, height, r, g, b } = event.data;
+        const { pngURI, wasmUrl, width, height, r, g, b, levelId } = event.data;
         const png = atob(pngURI.replace("data:image/png;base64,", ""));
         const bytes = Uint8Array.from(png, character => character.charCodeAt(0));
         const canvas = document.getElementById("mousse");
@@ -13,7 +13,10 @@ window.addEventListener("message", (event) => {
 
         globalThis.Module = {
                 canvas,
-                arguments: [String(height), String(width), String(r), String(g), String(b)],
+                arguments: [
+                        String(height), String(width), String(r), String(g), String(b),
+                        String(levelId)
+                ],
                 locateFile: path => path.endsWith(".wasm") ? wasmUrl : path,
                 preRun: [() => FS.writeFile("/screenshot.png", bytes)],
                 postRun: [() => {

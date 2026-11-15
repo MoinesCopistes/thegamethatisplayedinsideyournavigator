@@ -28,5 +28,5 @@ typedef struct {
 
 
 
-Platforms get_level(int number);
+Platforms get_level(int level_id);
 void unload_level(Platforms *p);

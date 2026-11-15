@@ -9,7 +9,11 @@
       "default_title": "Start mousse",
       "default_popup": "popup.html"
   },
-  "permissions": ["scripting", "activeTab"],
+  "background": {
+    "scripts": ["mousse.js"]
+  },
+  "permissions": ["scripting", "activeTab","tabs"],
+  "host_permissions": ["<all_urls>"],
   "content_security_policy": {
     "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
   },
