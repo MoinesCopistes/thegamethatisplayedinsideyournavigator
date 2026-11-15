@@ -17,6 +17,7 @@ typedef struct {
     bool kill; 
     bool move;
     bool end;
+    bool start;
 } Platform;
 
          

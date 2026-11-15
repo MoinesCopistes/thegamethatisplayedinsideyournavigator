@@ -287,8 +287,6 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    bike = create_bike(250, 100, 15);
-
     int screenHeight = atoi(argv[1]);
     int screenWidth = atoi(argv[2]);
     unsigned char r = (unsigned char)atoi(argv[3]);
@@ -315,6 +313,21 @@ int main(int argc, char **argv) {
     egg = LoadTextureFromImage(egg_image);
 
     plat = get_level(level_id);
+
+    const uint32_t bike_radius = 15;
+    double spawn_x = 250;
+    double spawn_y = 100;
+    for (size_t i = 0; i < plat.count; i++) {
+        if (!plat.items[i].start)
+            continue;
+
+        spawn_x = plat.items[i].rect.x +
+                  (plat.items[i].rect.width - BIKE_LENGTH) / 2.0;
+        spawn_y = plat.items[i].rect.y - bike_radius;
+        break;
+    }
+    bike = create_bike(spawn_x, spawn_y, bike_radius);
+
     usage_mask = malloc(sizeof(bool) * result.count);
     for (size_t i = 0; i < result.count; i++) {
         usage_mask[i] = 0;

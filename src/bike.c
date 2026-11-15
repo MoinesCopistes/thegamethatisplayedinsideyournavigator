@@ -129,6 +129,7 @@ void constraint_platforms(Bike *bike, Platforms p) {
                     bike->on_ground = 1;
                     // upside down so dead
                     if (bike->w2.x - bike->w1.x < 0.2) {
+                        if (p.items[i].end) continue;
                         bike->dead = true;
                     }
                 }
