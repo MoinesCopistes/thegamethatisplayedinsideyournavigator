@@ -29,9 +29,15 @@ browser.action.onClicked.addListener(async (tab) => {
                                         canvas.style.left = "0";
                                         canvas.style.zIndex = "2147483647";
                                         canvas.style.backgroundColor = "black";
-                                        canvas.width = width+"px";
-                                        canvas.height = height+"px";
+                                        canvas.width = width + "px";
+                                        canvas.height = height + "px";
+                                        canvas.tabIndex = 0;
+                                        canvas.oncontextmenu = "event.preventDefault()"
                                         document.body.appendChild(canvas);
+
+                                        canvas.focus();
+                                        // Re-focus the canvas whenever the user clicks on it
+                                        canvas.addEventListener('click', () => canvas.focus());
                                 }
 
 
@@ -68,7 +74,9 @@ browser.action.onClicked.addListener(async (tab) => {
                                                 } catch (e) {
                                                         console.log(e)
                                                 }
-                                        }]
+                                        }],
+                                        keyboardListeningElement: document.getElementById('canvas')
+
                                 };
                         } catch (e) { console.log(e) }
 

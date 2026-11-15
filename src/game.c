@@ -79,12 +79,12 @@ void UpdateDrawFrame() {
 
     DrawTexture(background, 0, 0, WHITE);
 
-    if (animation_finished && fading_frame_count < 60) {
+    if (animation_finished && fading_frame_count < 100) {
         fading_frame_count++;
     }
 
     if (fading_frame_count > 0) {
-        float alpha = (float)fading_frame_count / 60.0f;
+        float alpha = (float)fading_frame_count / 100.0f;
 
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(),
                       Fade(bg_color, alpha));
@@ -92,18 +92,23 @@ void UpdateDrawFrame() {
 
     int stagger_delay = 4;
     int anim_duration = 60;
-    //int stagger_delay = 0;
-    //int anim_duration = 0;
+    // int stagger_delay = 0;
+    // int anim_duration = 0;
     int active_index = 0;
+    int modulo = 256;
+    int countDone = 0;
     for (size_t i = 0; i < result.count; i++) {
-        if (!usage_mask[i])
+        if (!usage_mask[i]) {
+            countDone++;
             continue;
+        }
 
         int start_frame = active_index * stagger_delay;
         int local_frame = animation_frame_count - start_frame;
         double percentage = ((double)local_frame / (double)anim_duration);
         percentage = percentage * percentage; // quadtratic
         active_index++;
+        active_index = active_index % modulo;
         Region reg = result.items[i];
 
         if (local_frame <= 0) {
@@ -121,12 +126,17 @@ void UpdateDrawFrame() {
                                      percentage)},
                 bg_color);
         } else {
+
+            countDone++;
             DrawRectangleV((Vector2){.x = reg.final_pos.x - BG_GAP / 2.0,
                                      .y = reg.final_pos.y - BG_GAP / 2.0},
                            (Vector2){.x = reg.texture.width + BG_GAP,
                                      .y = reg.texture.height + BG_GAP},
                            bg_color);
         }
+    }
+    if (countDone == result.count) {
+        animation_finished = true;
     }
 
     active_index = 0;
@@ -137,6 +147,7 @@ void UpdateDrawFrame() {
         int start_frame = active_index * stagger_delay;
         int local_frame = animation_frame_count - start_frame;
         active_index++;
+        active_index = active_index % modulo;
         Region reg = result.items[i];
         if (local_frame <= 0) {
             DrawTextureV(reg.texture, reg.pos, WHITE);
@@ -147,9 +158,6 @@ void UpdateDrawFrame() {
         } else {
             DrawTextureV(reg.texture, reg.final_pos,
                          reg.platform->bumper ? RED : WHITE);
-            if (i == last_anim_idx) {
-                animation_finished = true;
-            }
         }
     }
 
