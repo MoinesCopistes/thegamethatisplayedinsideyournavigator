@@ -4,7 +4,7 @@
 #include "raylib.h"
 
 #define TRESHOLD_PX 10
-
+#define PX_OFFSET 10
 
 void remove_texture_region(Image *img, DetectionResult *r, bool* usage_mask) {
     for (size_t i = 0; i < r->count; i++) {
@@ -35,33 +35,33 @@ void get_transformations(Platforms *p, DetectionResult *r, bool *usage_mask) {
 
             if (bordertop > region_rect.width) {
                 r->items[j].final_pos = (Vector2) {.x = platform_rect.x + platform_rect.width - bordertop, .y = platform_rect.y};
-                bordertop = bordertop - region_rect.width;
                 // top left corner
                 if (bordertop == platform_rect.width && borderleft == platform_rect.height) {
-                    borderleft = borderleft - region_rect.height;
+                    borderleft = borderleft - region_rect.height - PX_OFFSET;
                 }
+                bordertop = bordertop - region_rect.width - PX_OFFSET;
                 usage_mask[j] = true;
                 continue;
             }
             if (borderleft > region_rect.height) {
                 r->items[j].final_pos = (Vector2) {.x = platform_rect.x, .y = platform_rect.y + platform_rect.height - borderleft};
-                borderleft = borderleft - region_rect.height;
                 // bottom left corner
                 if (borderleft < TRESHOLD_PX) {
-                    borderbottom = borderbottom - region_rect.width;
+                    borderbottom = borderbottom - region_rect.width - PX_OFFSET;
                 }
+                borderleft = borderleft - region_rect.height - PX_OFFSET;
                 usage_mask[j] = true;
                 continue;
             }
             if (borderbottom > region_rect.width) {
                 r->items[j].final_pos = (Vector2) {.x = platform_rect.x + platform_rect.width - borderbottom, .y = platform_rect.y + platform_rect.height - region_rect.height};
-                borderbottom = borderbottom - region_rect.width;
+                borderbottom = borderbottom - region_rect.width - PX_OFFSET;
                 usage_mask[j] = true;
                 continue;
             }
             if (borderright > region_rect.height) {
                 r->items[j].final_pos = (Vector2) {.x = platform_rect.x + platform_rect.width - region_rect.width, .y = platform_rect.y + platform_rect.height - borderright},
-                borderright = borderright - region_rect.height;
+                borderright = borderright - region_rect.height - PX_OFFSET;
                 usage_mask[j] = true;
                 continue;
             }

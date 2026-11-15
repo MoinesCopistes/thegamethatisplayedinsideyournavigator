@@ -1,7 +1,7 @@
 [
   {
     "arguments": [
-      "/home/theo/probe/emsdk/upstream/bin/clang",
+      "/home/kiwi/emsdk/upstream/bin/clang",
       "-target",
       "wasm32-unknown-emscripten",
       "-fignore-exceptions",
@@ -11,7 +11,7 @@
       "-enable-emscripten-sjlj",
       "-mllvm",
       "-disable-lsr",
-      "--sysroot=/home/theo/probe/emsdk/upstream/emscripten/cache/sysroot",
+      "--sysroot=/home/kiwi/emsdk/upstream/emscripten/cache/sysroot",
       "-Xclang",
       "-iwithsysroot/include/fakesdl",
       "-Xclang",
@@ -27,16 +27,16 @@
       "-dumpdir",
       "build/game.html-",
       "-o",
-      "/tmp/emscripten_temp_uekmnf9y/game.o",
+      "/tmp/emscripten_temp_hgf550i_/game.o",
       "src/game.c"
     ],
-    "directory": "/home/theo/probe/game",
-    "file": "/home/theo/probe/game/src/game.c",
-    "output": "/tmp/emscripten_temp_uekmnf9y/game.o"
+    "directory": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator",
+    "file": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator/src/game.c",
+    "output": "/tmp/emscripten_temp_hgf550i_/game.o"
   },
   {
     "arguments": [
-      "/home/theo/probe/emsdk/upstream/bin/clang",
+      "/home/kiwi/emsdk/upstream/bin/clang",
       "-target",
       "wasm32-unknown-emscripten",
       "-fignore-exceptions",
@@ -46,7 +46,7 @@
       "-enable-emscripten-sjlj",
       "-mllvm",
       "-disable-lsr",
-      "--sysroot=/home/theo/probe/emsdk/upstream/emscripten/cache/sysroot",
+      "--sysroot=/home/kiwi/emsdk/upstream/emscripten/cache/sysroot",
       "-Xclang",
       "-iwithsysroot/include/fakesdl",
       "-Xclang",
@@ -62,16 +62,16 @@
       "-dumpdir",
       "build/game.html-",
       "-o",
-      "/tmp/emscripten_temp_uekmnf9y/bike.o",
+      "/tmp/emscripten_temp_hgf550i_/bike.o",
       "src/bike.c"
     ],
-    "directory": "/home/theo/probe/game",
-    "file": "/home/theo/probe/game/src/bike.c",
-    "output": "/tmp/emscripten_temp_uekmnf9y/bike.o"
+    "directory": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator",
+    "file": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator/src/bike.c",
+    "output": "/tmp/emscripten_temp_hgf550i_/bike.o"
   },
   {
     "arguments": [
-      "/home/theo/probe/emsdk/upstream/bin/clang",
+      "/home/kiwi/emsdk/upstream/bin/clang",
       "-target",
       "wasm32-unknown-emscripten",
       "-fignore-exceptions",
@@ -81,7 +81,7 @@
       "-enable-emscripten-sjlj",
       "-mllvm",
       "-disable-lsr",
-      "--sysroot=/home/theo/probe/emsdk/upstream/emscripten/cache/sysroot",
+      "--sysroot=/home/kiwi/emsdk/upstream/emscripten/cache/sysroot",
       "-Xclang",
       "-iwithsysroot/include/fakesdl",
       "-Xclang",
@@ -97,16 +97,16 @@
       "-dumpdir",
       "build/game.html-",
       "-o",
-      "/tmp/emscripten_temp_uekmnf9y/level_assembler.o",
+      "/tmp/emscripten_temp_hgf550i_/level_assembler.o",
       "src/level_assembler.c"
     ],
-    "directory": "/home/theo/probe/game",
-    "file": "/home/theo/probe/game/src/level_assembler.c",
-    "output": "/tmp/emscripten_temp_uekmnf9y/level_assembler.o"
+    "directory": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator",
+    "file": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator/src/level_assembler.c",
+    "output": "/tmp/emscripten_temp_hgf550i_/level_assembler.o"
   },
   {
     "arguments": [
-      "/home/theo/probe/emsdk/upstream/bin/clang",
+      "/home/kiwi/emsdk/upstream/bin/clang",
       "-target",
       "wasm32-unknown-emscripten",
       "-fignore-exceptions",
@@ -116,7 +116,7 @@
       "-enable-emscripten-sjlj",
       "-mllvm",
       "-disable-lsr",
-      "--sysroot=/home/theo/probe/emsdk/upstream/emscripten/cache/sysroot",
+      "--sysroot=/home/kiwi/emsdk/upstream/emscripten/cache/sysroot",
       "-Xclang",
       "-iwithsysroot/include/fakesdl",
       "-Xclang",
@@ -132,16 +132,16 @@
       "-dumpdir",
       "build/game.html-",
       "-o",
-      "/tmp/emscripten_temp_uekmnf9y/level_manager.o",
+      "/tmp/emscripten_temp_hgf550i_/level_manager.o",
       "src/level_manager.c"
     ],
-    "directory": "/home/theo/probe/game",
-    "file": "/home/theo/probe/game/src/level_manager.c",
-    "output": "/tmp/emscripten_temp_uekmnf9y/level_manager.o"
+    "directory": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator",
+    "file": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator/src/level_manager.c",
+    "output": "/tmp/emscripten_temp_hgf550i_/level_manager.o"
   },
   {
     "arguments": [
-      "/home/theo/probe/emsdk/upstream/bin/clang",
+      "/home/kiwi/emsdk/upstream/bin/clang",
       "-target",
       "wasm32-unknown-emscripten",
       "-fignore-exceptions",
@@ -151,7 +151,7 @@
       "-enable-emscripten-sjlj",
       "-mllvm",
       "-disable-lsr",
-      "--sysroot=/home/theo/probe/emsdk/upstream/emscripten/cache/sysroot",
+      "--sysroot=/home/kiwi/emsdk/upstream/emscripten/cache/sysroot",
       "-Xclang",
       "-iwithsysroot/include/fakesdl",
       "-Xclang",
@@ -167,11 +167,11 @@
       "-dumpdir",
       "build/game.html-",
       "-o",
-      "/tmp/emscripten_temp_uekmnf9y/box_finder.o",
+      "/tmp/emscripten_temp_hgf550i_/box_finder.o",
       "src/box_finder.c"
     ],
-    "directory": "/home/theo/probe/game",
-    "file": "/home/theo/probe/game/src/box_finder.c",
-    "output": "/tmp/emscripten_temp_uekmnf9y/box_finder.o"
+    "directory": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator",
+    "file": "/home/kiwi/code/raylib/thegamethatisplayedinsideyournavigator/src/box_finder.c",
+    "output": "/tmp/emscripten_temp_hgf550i_/box_finder.o"
   }
 ]
