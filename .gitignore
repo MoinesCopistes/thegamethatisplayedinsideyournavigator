@@ -1,4 +1,5 @@
 *.a
+compile_commands.json
 game.js
 *.o
 *.wasm
