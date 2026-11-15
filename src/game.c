@@ -25,6 +25,7 @@ bool *usage_mask;
 
 bool animation_finished = false;
 size_t last_anim_idx = -1;
+float accumulator = 0.0f;
 void DrawBike(Bike *bike) {
 
     Vector2 diff = {.x = (bike->w2.x - bike->w1.x),
@@ -38,15 +39,25 @@ void DrawBike(Bike *bike) {
     Rectangle dest = {bike->w1.x + 10, bike->w1.y, bike_texture.width,
                       bike_texture.height};
 
-    //DrawCircle(bike->w1.x, bike->w1.y, bike->radius, YELLOW);
-    //DrawCircle(bike->w2.x, bike->w2.y, bike->radius, YELLOW);
+    // DrawCircle(bike->w1.x, bike->w1.y, bike->radius, YELLOW);
+    // DrawCircle(bike->w2.x, bike->w2.y, bike->radius, YELLOW);
     DrawTexturePro(bike_texture, source, dest, origin, angle * RAD2DEG, WHITE);
 
-    step(bike, GetFrameTime(), plat);
+    float frameTime = GetFrameTime();
 
-    if (IsKeyDown(KEY_RIGHT) && bike->on_ground) {
+    // Avoid huge catch-up after a lag spike.
+    frameTime = fminf(frameTime, 0.25f);
+
+    accumulator += frameTime;
+
+    while (accumulator >= BIKE_DT) {
+        step(bike, plat);
+        accumulator -= BIKE_DT;
+    }
+
+    if (IsKeyDown(KEY_RIGHT)) {
         bike->throttle = 1;
-    } else if (IsKeyDown(KEY_LEFT) && bike->on_ground) {
+    } else if (IsKeyDown(KEY_LEFT)) {
         bike->throttle = -1;
     } else {
         bike->throttle = 0;
@@ -55,10 +66,10 @@ void DrawBike(Bike *bike) {
         bike->torque = 10;
     } else {
         bike->torque = 0;
-    }    
-    if (IsKeyPressed(KEY_SPACE)){
-        jump(bike, GetFrameTime());
-    }    
+    }
+    if (IsKeyPressed(KEY_SPACE)) {
+        jump(bike);
+    }
 }
 
 void UpdateDrawFrame() {
@@ -74,19 +85,15 @@ void UpdateDrawFrame() {
 
     if (fading_frame_count > 0) {
         float alpha = (float)fading_frame_count / 60.0f;
-        Color c = Fade(bg_color, alpha);
-
-        printf("bg: %d %d %d %d\n", c.r, c.g, c.b, c.a);
-        
 
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(),
                       Fade(bg_color, alpha));
     }
 
-    //int stagger_delay = 4;
-    //int anim_duration = 60;
-    int stagger_delay = 0;
-    int anim_duration = 0;
+    int stagger_delay = 4;
+    int anim_duration = 60;
+    //int stagger_delay = 0;
+    //int anim_duration = 0;
     int active_index = 0;
     for (size_t i = 0; i < result.count; i++) {
         if (!usage_mask[i])
@@ -138,7 +145,8 @@ void UpdateDrawFrame() {
                 update_rec_position(local_frame, anim_duration, i, &result);
             DrawTextureV(reg.texture, pos, WHITE);
         } else {
-            DrawTextureV(reg.texture, reg.final_pos, WHITE);
+            DrawTextureV(reg.texture, reg.final_pos,
+                         reg.platform->bumper ? RED : WHITE);
             if (i == last_anim_idx) {
                 animation_finished = true;
             }
@@ -166,7 +174,7 @@ int main(int argc, char **argv) {
     ImageResize(&bike_image, 80,
                 (double)bike_image.height / (double)bike_image.width * 80);
 
-    int brightness =   (0.21 * r) + (0.72 * g) + (0.07 * b);
+    int brightness = (0.21 * r) + (0.72 * g) + (0.07 * b);
     if (brightness <= 125)
         ImageColorInvert(&bike_image);
     bike_texture = LoadTextureFromImage(bike_image);

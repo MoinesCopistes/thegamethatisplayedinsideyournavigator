@@ -11,6 +11,7 @@
 typedef struct {
     Rectangle rect;
     bool kill; 
+    bool bumper;
 } Platform;
 
          

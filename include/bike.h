@@ -11,6 +11,9 @@
 #define TORQUE_ACCEL 130
 #define JUMP_SPEED 400
 
+// 120 steps per second of physics
+#define BIKE_DT 1.0/120.0
+
 typedef struct {
   double x;
   double y;
@@ -30,10 +33,10 @@ typedef struct {
   bool on_ground;
 } Bike;
 
-void step(Bike *bike, double dt, Platforms p);
+void step(Bike *bike, Platforms p);
 
 Bike *create_bike(double x, double y, uint32_t radius);
 
-void jump(Bike* bike, double dt);
+void jump(Bike* bike);
 
 #endif // bike_h_INCLUDED
