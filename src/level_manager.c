@@ -36,6 +36,10 @@ Platforms get_level() {
     da_append(p, ((Platform){
                      (Rectangle){.x = 950, .y = 330, .width = 50, .height = 10},
                      .kill=0, .move = 0, .bumper = 3}));
+    da_append(p, ((Platform) {
+                     (Rectangle){.x = 100, .y = 60, .width = 40, .height = 40},
+                     .kill = 0, .move = 0, .bumper = 0, .end = 1
+                     }));
     return p;
 }
 

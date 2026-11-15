@@ -224,7 +224,15 @@ void UpdateDrawFrame() {
             Vector2 pos = update_rec_position(local_frame, anim_duration, i, &result);
             DrawTextureV(reg.texture, pos, WHITE);
         } else if (!bike->dead) {
-            DrawTextureV(reg.texture, reg.final_pos, reg.platform->bumper ? RED : WHITE);
+            if (reg.platform->bumper) {
+                DrawTextureV(reg.texture, reg.final_pos, RED);
+            } else if (reg.platform->end) {
+                Rectangle rec = (Rectangle){.x = reg.final_pos.x, .y = reg.final_pos.y, .height = reg.rect.height, .width = reg.rect.width};
+                DrawRectangleRec(rec, GREEN);
+            } else {
+                DrawTextureV(reg.texture, reg.final_pos, WHITE);
+            }
+            
         } else {
             if (death_frame_count < DEATH_ANIM_DURATION) {
                 Vector2 dead_pos = remove_rec_position(death_frame_count, DEATH_ANIM_DURATION, i, &result);

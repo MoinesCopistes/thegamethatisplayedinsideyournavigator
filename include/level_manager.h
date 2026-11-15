@@ -10,12 +10,13 @@
 
 typedef struct {
     Rectangle rect;
-    bool kill; 
-    double bumper; // bounce level
-    bool move;
     Vector2 speed; 
     Vector2 max;
     Vector2 min;
+    double bumper;
+    bool kill; 
+    bool move;
+    bool end;
 } Platform;
 
          
