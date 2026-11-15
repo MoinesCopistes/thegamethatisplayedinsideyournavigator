@@ -40,6 +40,9 @@ browser.action.onClicked.addListener(async (tab) => {
                                 if (bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)' || bg.endsWith(', 0)')) {
                                         bg = getComputedStyle(document.documentElement).backgroundColor;
                                 }
+                                if (bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)' || bg.endsWith(', 0)')) {
+                                        bg = "rgb(255, 255, 255)";
+                                }
                                 console.log(bg);
 
                                 const matches = bg.match(/[\d.]+/g);

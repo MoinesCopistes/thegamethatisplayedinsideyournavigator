@@ -38,17 +38,27 @@ void DrawBike(Bike *bike) {
     Rectangle dest = {bike->w1.x + 10, bike->w1.y, bike_texture.width,
                       bike_texture.height};
 
+    DrawCircle(bike->w1.x, bike->w1.y, bike->radius, YELLOW);
+    DrawCircle(bike->w2.x, bike->w2.y, bike->radius, YELLOW);
     DrawTexturePro(bike_texture, source, dest, origin, angle * RAD2DEG, WHITE);
 
     step(bike, GetFrameTime(), plat);
 
     if (IsKeyDown(KEY_RIGHT) && bike->on_ground) {
-        bike->throttle = 1000;
+        bike->throttle = 1;
     } else if (IsKeyDown(KEY_LEFT) && bike->on_ground) {
-        bike->throttle = -1000;
+        bike->throttle = -1;
     } else {
         bike->throttle = 0;
     }
+    if (IsKeyDown(KEY_UP)) {
+        bike->torque = 10;
+    } else {
+        bike->torque = 0;
+    }    
+    if (IsKeyPressed(KEY_SPACE)){
+        jump(bike, GetFrameTime());
+    }    
 }
 
 void UpdateDrawFrame() {
@@ -73,8 +83,10 @@ void UpdateDrawFrame() {
                       Fade(bg_color, alpha));
     }
 
-    int stagger_delay = 4;
-    int anim_duration = 60;
+    //int stagger_delay = 4;
+    //int anim_duration = 60;
+    int stagger_delay = 0;
+    int anim_duration = 0;
     int active_index = 0;
     for (size_t i = 0; i < result.count; i++) {
         if (!usage_mask[i])
@@ -138,7 +150,7 @@ void UpdateDrawFrame() {
 }
 
 int main(int argc, char **argv) {
-    bike = create_bike(200, 200, 40);
+    bike = create_bike(200, 200, 15);
 
     int screenHeight = atoi(argv[1]);
     int screenWidth = atoi(argv[2]);
@@ -151,8 +163,12 @@ int main(int argc, char **argv) {
                "raylib [core] example - basic window");
     result = process_screen("/screenshot.png");
     Image bike_image = LoadImageFromMemory(".png", bike_png, bike_png_len);
-    ImageResize(&bike_image, 200,
-                (double)bike_image.height / (double)bike_image.width * 200);
+    ImageResize(&bike_image, 80,
+                (double)bike_image.height / (double)bike_image.width * 80);
+
+    int brightness =   (0.21 * r) + (0.72 * g) + (0.07 * b);
+    if (brightness <= 125)
+        ImageColorInvert(&bike_image);
     bike_texture = LoadTextureFromImage(bike_image);
     printf("texture: %d", bike_texture.height);
 

@@ -2,10 +2,14 @@
 #define bike_h_INCLUDED
 
 #include "level_manager.h"
+#include "raylib.h"
 #include <stdint.h>
 
-#define BIKE_LENGTH 120
-#define GRAVITY 300
+#define BIKE_LENGTH 50
+#define GRAVITY 1200
+#define THROTTLE_ACCEL 1500
+#define TORQUE_ACCEL 135
+#define JUMP_SPEED 400
 
 typedef struct {
   double x;
@@ -14,18 +18,15 @@ typedef struct {
   double prev_y;
 } VerletVector;
 
-typedef struct {
-  double x;
-  double y;
-} Vector;
 
 typedef struct {
   VerletVector w1; // wheel 1 x
   VerletVector w2;
-  Vector acc1;
-  Vector acc2;
+  Vector2 acc1;
+  Vector2 acc2;
   uint32_t radius;
   double throttle;
+  double torque;
   bool on_ground;
 } Bike;
 
@@ -33,5 +34,6 @@ void step(Bike *bike, double dt, Platforms p);
 
 Bike *create_bike(double x, double y, uint32_t radius);
 
-void add_force(Bike *bike, Vector force);
+void jump(Bike* bike, double dt);
+
 #endif // bike_h_INCLUDED
