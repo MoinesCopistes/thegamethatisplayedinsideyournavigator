@@ -99,16 +99,14 @@ void DrawBike(Bike *bike) {
         Vector2 egg_origin = {egg.width / 2.0f, egg.height};
         DrawTexturePro(egg, egg_source, egg_dest, egg_origin, angle * RAD2DEG, WHITE);
     } else if (death_frame_count < 30) {
-        // Fade the bike out over the first 30 frames of death
         float alpha = 1.0f - ((float)death_frame_count / 30.0f);
         DrawTexturePro(bike_texture, source, dest, origin, angle * RAD2DEG, Fade(WHITE, alpha));
     }
 
-    // --- STOP PHYSICS AND INPUT IF DEAD ---
     if (bike->dead) return; 
 
     float frameTime = GetFrameTime();
-    frameTime = fminf(frameTime, 0.25f); // Avoid huge catch-up after a lag spike.
+    frameTime = fminf(frameTime, 0.25f);
     accumulator += frameTime;
 
     while (accumulator >= BIKE_DT) {
@@ -129,14 +127,11 @@ void DrawBike(Bike *bike) {
 
 void UpdateDrawFrame() {
     animation_frame_count++;
-
-    // 1. Handle Death Counter ONCE per frame
     if (bike->dead) {
         if (death_frame_count < DEATH_ANIM_DURATION) {
             death_frame_count++;
 
 #if defined(PLATFORM_WEB)
-            // Notify the host page once, after the death animation completes.
             if (death_frame_count == DEATH_ANIM_DURATION) {
                 EM_ASM({
                     window.parent.postMessage({type: "mousse-dead"}, "*");
@@ -154,17 +149,17 @@ void UpdateDrawFrame() {
     BeginDrawing();
     DrawTexture(background, 0, 0, WHITE);
 
-    if (animation_finished && fading_frame_count < 100) {
+    if (animation_finished && fading_frame_count < 50) {
         fading_frame_count++;
     }
 
     if (fading_frame_count > 0) {
-        float alpha = (float)fading_frame_count / 100.0f;
+        float alpha = (float)fading_frame_count / 50.0f;
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(bg_color, alpha));
     }
 
-    int stagger_delay = 4;
-    int anim_duration = 60;
+    int stagger_delay = 1;
+    int anim_duration = 30;
     int active_index = 0;
     int modulo = 128;
     int countDone = 0;
@@ -272,7 +267,7 @@ int main(int argc, char **argv) {
     ImageResize(&egg_image, 18, (double)egg_image.height / (double)egg_image.width * 18);
     egg = LoadTextureFromImage(egg_image);
 
-    plat = get_level();
+    plat = get_level(0);
     usage_mask = malloc(sizeof(bool) * result.count);
     for (size_t i = 0; i < result.count; i++) {
         usage_mask[i] = 0;
