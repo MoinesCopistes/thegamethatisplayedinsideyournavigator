@@ -18,6 +18,9 @@ browser.action.onClicked.addListener(async (tab) => {
                                 console.log(bytes.length);
                                 let canvas = document.getElementById("mousse");
 
+
+                                var width = document.documentElement["clientWidth"];
+                                var height = document.documentElement["clientHeight"];
                                 if (!canvas) {
                                         canvas = document.createElement("canvas");
                                         canvas.id = "mousse";
@@ -25,24 +28,24 @@ browser.action.onClicked.addListener(async (tab) => {
                                         canvas.style.top = "0";
                                         canvas.style.left = "0";
                                         canvas.style.zIndex = "2147483647";
+                                        canvas.style.backgroundColor = "black";
+                                        canvas.width = width+"px";
+                                        canvas.height = height+"px";
                                         document.body.appendChild(canvas);
                                 }
 
 
-                                var width = document.documentElement["clientWidth"];
-                                var height = document.documentElement["clientHeight"];
 
                                 let bg = getComputedStyle(document.body).backgroundColor;
                                 if (bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)' || bg.endsWith(', 0)')) {
                                         bg = getComputedStyle(document.documentElement).backgroundColor;
                                 }
+                                console.log(bg);
 
                                 const matches = bg.match(/[\d.]+/g);
                                 const r = parseInt(matches[0], 10);
                                 const g = parseInt(matches[1], 10);
                                 const b = parseInt(matches[2], 10);
-                                const a = matches[3] ? parseFloat(matches[3]) : 1.0;
-                                const a255 = Math.round(a * 255);
 
                                 // https://emscripten.org/docs/api_reference/module.html
                                 globalThis.Module = {
@@ -53,7 +56,6 @@ browser.action.onClicked.addListener(async (tab) => {
                                                 "" + r,
                                                 "" + g,
                                                 "" + b,
-                                                "" + a255
                                         ],
                                         locateFile: (path) => path.endsWith(".wasm") ? wasmUrl : path,
                                         preRun: [() => {

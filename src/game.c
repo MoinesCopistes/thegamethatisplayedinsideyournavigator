@@ -55,14 +55,22 @@ void UpdateDrawFrame() {
     animation_frame_count++;
 
     BeginDrawing();
-    ClearBackground(bg_color);
+
+    DrawTexture(background, 0, 0, WHITE);
 
     if (animation_finished && fading_frame_count < 60) {
         fading_frame_count++;
-        float fade = 1.0f - ((float)fading_frame_count / 60.0f);
-        DrawTexture(background, 0, 0, Fade(WHITE, fade));
-    } else if (fading_frame_count < 60) {
-        DrawTexture(background, 0, 0, WHITE);
+    }
+
+    if (fading_frame_count > 0) {
+        float alpha = (float)fading_frame_count / 60.0f;
+        Color c = Fade(bg_color, alpha);
+
+        printf("bg: %d %d %d %d\n", c.r, c.g, c.b, c.a);
+        
+
+        DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(),
+                      Fade(bg_color, alpha));
     }
 
     int stagger_delay = 4;
@@ -102,8 +110,6 @@ void UpdateDrawFrame() {
         }
     }
 
-    stagger_delay = 4;
-    anim_duration = 60;
     active_index = 0;
     for (size_t i = 0; i < result.count; i++) {
         if (!usage_mask[i])
