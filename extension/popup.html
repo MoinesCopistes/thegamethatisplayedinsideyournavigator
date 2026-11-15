@@ -1,36 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="fr">
 <head>
-<meta charset="utf-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Matreggs</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      width: 320px;
+      margin: 0;
+      padding: 18px;
+      font: 14px/1.4 Arial, sans-serif;
+      color: #222;
+      background: white;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    p { margin: 0 0 14px; }
+
+    .tutorial {
+      padding: 12px;
+      border: 1px solid #ccc;
+    }
+
+    .tutorial strong { display: block; }
+
+    .example {
+      position: relative;
+      height: 65px;
+      margin: 10px 0;
+      border-bottom: 2px solid #555;
+    }
+
+    .bike {
+      position: absolute;
+      left: 12px;
+      bottom: 2px;
+      font-size: 26px;
+    }
+
+    .arrow {
+      position: absolute;
+      left: 78px;
+      bottom: 13px;
+      font-size: 22px;
+    }
+
+    .goal {
+      position: absolute;
+      right: 12px;
+      bottom: 0;
+      width: 50px;
+      height: 32px;
+      background: #36a853;
+    }
+
+    .bumper {
+      position: absolute;
+      left: 82px;
+      bottom: 0;
+      width: 45px;
+      height: 7px;
+      background: #d93025;
+    }
+
+    .controls {
+      margin: 0;
+      font-size: 12px;
+    }
+
+    kbd {
+      padding: 1px 4px;
+      border: 1px solid #aaa;
+      background: #eee;
+      font: inherit;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 14px;
+      padding: 11px;
+      border: 1px solid #222;
+      background: #222;
+      color: white;
+      font: inherit;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover { background: #444; }
+    button:focus-visible { outline: 2px solid #222; outline-offset: 2px; }
+  </style>
 </head>
 <body>
-    <div>
-        <h1>Matreggs</h1>
-        <p>
-            Salut ma poulette, j'ai oublié mes oeufs à la maison...
-            Pourrais tu m'en ramener le + possible sains et saufs ?
-        </p>
+  <h1>Matreggs</h1>
+  <p>
+    Salut ma poulette, j'ai oublié mes œufs à la maison…
+    Pourrais-tu m'en ramener le plus possible, sains et saufs&nbsp;?
+  </p>
 
-    <button id="start">Yes</button>
+  <div class="tutorial">
+    <strong>Amène le vélo jusqu'au bloc vert.</strong>
+    <div class="example" aria-hidden="true">
+      <span class="bike">🚲</span>
+      <span class="bumper"></span>
+      <span class="arrow">→</span>
+      <span class="goal"></span>
     </div>
+    <p class="controls">
+      <kbd>←</kbd> <kbd>→</kbd> avancer ·
+      <kbd>↑</kbd> <kbd>↓</kbd> tourner ·
+      <kbd>Espace</kbd> sauter<br>
+      Les plateformes rouges te font rebondir.
+    </p>
+  </div>
 
-    <style>
-        button {
-        width: 100%;
-        padding: 20px;
-        border: 1px solid black;
-        background-color: white;
-        outline: none;
-        }
-        div {
-        width: 300px;
-        }
-    </style>
-
-
+  <button id="start" type="button">Jouer</button>
+  <script src="mousse.js"></script>
 </body>
-
-
-<script src="mousse.js"></script>
-
 </html>
