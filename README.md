@@ -1,7 +1,7 @@
 # Gamejam llnux 2026
 
 
-The goal is simple, complete the platforms, the catch ? The game is played inside your browser with it's elements and tabs are levels ...
+The goal is simple, complete the platforms, the catch ? The game is played inside your browser with it's elements and tabs being levels ...
 
 Example of level 1 on raylib
 
