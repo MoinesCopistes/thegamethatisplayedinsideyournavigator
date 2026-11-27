@@ -14,3 +14,6 @@ Example of level 1 on raylib
 
 Release available here
 https://itch.io/jam/louvain-li-nux-game-jam-2027/rate/5369593
+
+Extension available here
+https://addons.mozilla.org/en-US/firefox/addon/ilfautsauvermousse/
